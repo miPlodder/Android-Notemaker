@@ -8,9 +8,11 @@
 
         android:id="@+id/tvNotes"
         android:text="text"
+        android:textSize="20sp"
+        android:textColor="#000"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="3"/>
+        android:maxLines="3" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,6 +21,7 @@
         <TextView
             android:id="@+id/tvTimeStamp"
             android:text="timestamp"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
