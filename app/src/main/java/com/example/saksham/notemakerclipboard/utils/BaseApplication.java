@@ -1,4 +1,4 @@
-package com.example.saksham.notemakerclipboard;
+package com.example.saksham.notemakerclipboard.utils;
 
 import android.app.Application;
 

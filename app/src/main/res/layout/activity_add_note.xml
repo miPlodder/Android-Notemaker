@@ -11,13 +11,32 @@
         android:id="@+id/toolbarAddNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        app:theme="@style/ToolbarStyle">
+
+
+        <ImageButton
+            android:id="@+id/ibAddNote"
+            android:src="@drawable/ic_done"
+            android:layout_gravity="right"
+            android:paddingRight="20dp"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"/>
+
+
+    </android.support.v7.widget.Toolbar>
 
     <EditText
         android:id="@+id/etAddNote"
-        android:background="@null"
+        android:hint="Write Something ..."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginLeft="20dp"
         android:paddingTop="40dp" />
+
+
 
 </LinearLayout>

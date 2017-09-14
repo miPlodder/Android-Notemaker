@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,13 +16,14 @@ import com.example.saksham.notemakerclipboard.Adapters.NotesAdapter;
 import com.example.saksham.notemakerclipboard.Model.NotesPOJO;
 import com.example.saksham.notemakerclipboard.R;
 import com.example.saksham.notemakerclipboard.Views.Activity.AddNoteActivity;
+import com.example.saksham.notemakerclipboard.Views.Activity.EditNoteActivity;
+import com.example.saksham.notemakerclipboard.utils.Constant;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -59,11 +59,24 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         this.initialise(root);
 
 
-
         notes = new ArrayList<>();
         this.getSavedTextFromDB();
 
-        notesAdapter = new NotesAdapter(notes, getActivity());
+        notesAdapter = new NotesAdapter(notes, getActivity(), new NotesAdapter.OnEdit() {
+
+            @Override
+            public void doAfterOnEdit(int position, String note) {
+
+                Intent i = new Intent(getContext(), EditNoteActivity.class);
+                i.putExtra(Constant.ACTIVITY_INTENT_KEY_POSITION,
+                        position);
+
+                i.putExtra(Constant.ACTIVITY_INTENT_KEY_EDIT,
+                        note);
+
+                startActivityForResult(i, Constant.ACTIVITY_EDIT_NOTE_CODE);
+            }
+        });
         rvNotes.setAdapter(notesAdapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -82,7 +95,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         rvNotes = (RecyclerView) root.findViewById(R.id.rvNotes);
 
         realm = Realm.getDefaultInstance();
-        Log.d(TAG, "initialise: "+Realm.getDefaultInstance());
+        Log.d(TAG, "initialise: " + Realm.getDefaultInstance());
 
     }
 
@@ -111,7 +124,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onClick: ");
                 startActivityForResult(
                         new Intent(getContext(), AddNoteActivity.class),
-                        101
+                        Constant.ACTIVITY_ADD_NOTE_CODE
                 );
                 break;
         }
@@ -120,12 +133,21 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 101 && resultCode == RESULT_OK) {
+        if (requestCode == Constant.ACTIVITY_ADD_NOTE_CODE && resultCode == RESULT_OK) {
 
             //adding note to realm database
-            addNote(data.getStringExtra("note"));
+            addNote(data.getStringExtra(Constant.ACTIVITY_INTENT_KEY_ADD));
+        }
+
+        if (requestCode == Constant.ACTIVITY_EDIT_NOTE_CODE && resultCode == RESULT_OK) {
+
+            Toast.makeText(getContext(), "Modified Note", Toast.LENGTH_SHORT).show();
+
+            //use intent to retriece the data
+            updateNote("");
         }
     }
+
 
     //Add/write new Entry to DB
     public void addNote(final String note) {
@@ -135,11 +157,11 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             @Override
             public void execute(Realm realm) {
 
-                NotesPOJO newNote = new NotesPOJO(note,"");
+                NotesPOJO newNote = new NotesPOJO(note, "");
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aa");
                 String format = simpleDateFormat.format(new Date());
-                Log.d(TAG, "execute: "+format);
+                Log.d(TAG, "execute: " + format);
 
                 newNote.setTimeStamp(format);
 
@@ -154,4 +176,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    private void updateNote(String s) {
+    }
 }

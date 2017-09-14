@@ -11,5 +11,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of back arrow below-->
+        <item name="colorControlNormal">#FFF</item>
+    </style>
+
 
 </resources>
