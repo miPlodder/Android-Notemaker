@@ -44,13 +44,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        Log.d(TAG, "onCreate: ");
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -95,7 +88,17 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         rvNotes = (RecyclerView) root.findViewById(R.id.rvNotes);
 
         realm = Realm.getDefaultInstance();
-        Log.d(TAG, "initialise: " + Realm.getDefaultInstance());
+        /*
+        This is how we delete all rows from REALM DATABASE
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                realm.deleteAll();
+            }
+        });*/
+
 
     }
 
@@ -144,7 +147,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), "Modified Note", Toast.LENGTH_SHORT).show();
 
             //use intent to retriece the data
-            updateNote("");
+            updateNote(data);
         }
     }
 
@@ -152,7 +155,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     //Add/write new Entry to DB
     public void addNote(final String note) {
 
-
+        //here no need of beginning or committing a transaction
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -164,8 +167,10 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "execute: " + format);
 
                 newNote.setTimeStamp(format);
+                newNote.setIndex(notes.size() + 1);
 
                 notes.add(newNote);
+                Log.d(TAG, "addition "+newNote.getIndex());
                 realm.copyToRealmOrUpdate(notes);
 
             }
@@ -176,6 +181,25 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void updateNote(String s) {
+    //edit the notes here to data and then notify the Realm Database
+    private void updateNote(Intent i) {
+
+        final String note = i.getStringExtra(Constant.ACTIVITY_INTENT_KEY_EDIT);
+        final int position = i.getIntExtra(Constant.ACTIVITY_INTENT_KEY_POSITION, -1);
+
+        //here no need of beginning or committing a transaction
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                notes.get(position).setText(note);
+                //Log.d(TAG, "editing "+notes.get(position).getIndex());
+                realm.copyToRealmOrUpdate(notes.get(position));
+
+            }
+        });
+
+        notesAdapter.notifyDataSetChanged();
+
     }
 }

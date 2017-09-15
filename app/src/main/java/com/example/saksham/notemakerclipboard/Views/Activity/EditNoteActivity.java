@@ -20,12 +20,14 @@ import com.example.saksham.notemakerclipboard.utils.Constant;
  * Created by saksham on 9/15/2017.
  */
 
-public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "EditNoteActivity";
     Toolbar toolbarAddNote;
     EditText etEditNote;
     ImageButton ibAddNote;
+    String note;
+    int position;
 
 
     //take the intent add add text to the edittext and
@@ -40,16 +42,17 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         this.initialise();
 
         Intent i = getIntent();
-        if(i != null){
+        if (i != null) {
 
-            String note = i.getStringExtra(Constant.ACTIVITY_INTENT_KEY_EDIT);
+            note = i.getStringExtra(Constant.ACTIVITY_INTENT_KEY_EDIT);
+            position = i.getIntExtra(Constant.ACTIVITY_INTENT_KEY_POSITION, -1);
             etEditNote.setText(note);
             //used to place the cursor at the end of text
             etEditNote.requestFocus();
 
         }
 
-        Log.d(TAG, "onCreate: "+getIntent());
+        Log.d(TAG, "onCreate: " + getIntent());
 
     }
 
@@ -76,14 +79,16 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
             case R.id.ibAddNote:
 
                 Intent i = new Intent();
                 i.putExtra(Constant.ACTIVITY_INTENT_KEY_EDIT,
                         etEditNote.getText().toString());
-                setResult(RESULT_OK,i);
+                i.putExtra(Constant.ACTIVITY_INTENT_KEY_POSITION,
+                        position);
+                setResult(RESULT_OK, i);
                 finish();
                 break;
         }

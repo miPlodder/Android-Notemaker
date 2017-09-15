@@ -15,5 +15,6 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         Realm.init(this);
+
     }
 }
