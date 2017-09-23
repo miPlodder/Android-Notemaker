@@ -3,10 +3,15 @@ package com.example.saksham.notemakerclipboard.Views.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +22,10 @@ import com.example.saksham.notemakerclipboard.Model.NotesPOJO;
 import com.example.saksham.notemakerclipboard.R;
 import com.example.saksham.notemakerclipboard.Views.Activity.AddNoteActivity;
 import com.example.saksham.notemakerclipboard.Views.Activity.EditNoteActivity;
+import com.example.saksham.notemakerclipboard.Views.Activity.MainActivity;
 import com.example.saksham.notemakerclipboard.utils.Constant;
+import com.example.saksham.notemakerclipboard.utils.RvItemClickListener;
+import com.example.saksham.notemakerclipboard.utils.ToolbarCallbackActionMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,6 +46,8 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     ArrayList<NotesPOJO> notes;
     NotesAdapter notesAdapter;
     Realm realm;
+    ActionMode mActionMode;
+    MainActivity mainActivity;
 
     public NotesFragment() {
         // Required empty public constructor
@@ -50,7 +60,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_notes, container, false);
         this.initialise(root);
-
 
         notes = new ArrayList<>();
         this.getSavedTextFromDB();
@@ -73,6 +82,8 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         rvNotes.setAdapter(notesAdapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //adding listener for item click and long clicks
+        this.addingRVListener();
 
         //TODO check what below statement does
         //rvNotes.setItemAnimator(new DefaultItemAnimator());
@@ -90,8 +101,8 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         realm = Realm.getDefaultInstance();
         /*
         This is how we delete all rows from REALM DATABASE
-
-        realm.executeTransaction(new Realm.Transaction() {
+*/
+        /*realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
 
@@ -170,7 +181,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 newNote.setIndex(notes.size() + 1);
 
                 notes.add(newNote);
-                Log.d(TAG, "addition "+newNote.getIndex());
+                Log.d(TAG, "addition " + newNote.getIndex());
                 realm.copyToRealmOrUpdate(notes);
 
             }
@@ -202,4 +213,89 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         notesAdapter.notifyDataSetChanged();
 
     }
+
+    private void addingRVListener() {
+
+        rvNotes.addOnItemTouchListener(new RvItemClickListener(getContext(), rvNotes, new RvItemClickListener.OnRvItemClickListener() {
+            @Override
+            public void setOnItemClick(View v, int position) {
+                Toast.makeText(getContext(), "OnItemClick, -->" + notes.get(position), Toast.LENGTH_SHORT).show();
+                if (mActionMode != null) {
+                    onListItemSelect(position);
+                }
+            }
+
+            @Override
+            public void setOnLongItemClick(View v, int position) {
+                Toast.makeText(getContext(), "Long Click", Toast.LENGTH_SHORT).show();
+                onListItemSelect(position);
+            }
+        }));
+
+    }
+
+    private void onListItemSelect(int position) {
+
+        notesAdapter.toggleSelection(position);
+
+        boolean hasCheckedItems = notesAdapter.getSelectedCount() > 0; //check if any items are already selected
+
+        if (hasCheckedItems && mActionMode == null) {
+            //there are some items selected start the action mode
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ToolbarCallbackActionMode(getActivity(), notesAdapter, notes, this));
+
+        } else if (!hasCheckedItems && mActionMode != null) {
+            //there are no items selected finish the action mode
+            mActionMode.finish();
+        }
+        if (mActionMode != null)
+            mActionMode.setTitle(String.valueOf(notesAdapter.getSelectedCount()) + " selected");
+    }
+
+    //set Action mode null after use
+    public void setNullToActionMode() {
+
+        if (mActionMode != null) {
+            mActionMode = null;
+        }
+    }
+
+    //Delete selected rows
+    public void deleteRows() {
+        //get Selected items
+        final SparseBooleanArray selected = notesAdapter.getmSelectedItems();
+
+        //loop through selected items
+        for (int i = (selected.size() - 1); i >= 0; i--) {
+
+            final int key = selected.keyAt(i);
+
+            if (selected.valueAt(i)) {
+                //If the current id is selected remove the item via key
+                //deleteFromNoteRealm(selected.keyAt(i));
+
+
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+                        NotesPOJO note = notes.get(key);
+                        note.deleteFromRealm();
+
+
+                    }
+                });
+
+                notes.remove(key);
+                notesAdapter.notifyDataSetChanged();
+            }
+        }
+
+//        Toast.makeText(getContext(), selected.size() + " items deleted", Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(rvNotes, selected.size() + " Notes deleted", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        mActionMode.finish();
+
+    }
+
 }

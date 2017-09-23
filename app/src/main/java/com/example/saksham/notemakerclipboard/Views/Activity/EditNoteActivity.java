@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -92,5 +93,25 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                Intent i = new Intent();
+                i.putExtra(Constant.ACTIVITY_INTENT_KEY_EDIT,
+                        etEditNote.getText().toString());
+                i.putExtra(Constant.ACTIVITY_INTENT_KEY_POSITION,
+                        position);
+                setResult(RESULT_OK, i);
+                finish();
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
