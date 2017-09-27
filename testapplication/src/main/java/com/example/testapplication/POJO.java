@@ -13,7 +13,17 @@ import io.realm.annotations.PrimaryKey;
 
 public class POJO extends RealmObject {
 
+    @PrimaryKey
+    private String id;
     private String note;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNote() {
         return note;
@@ -23,12 +33,6 @@ public class POJO extends RealmObject {
         this.note = note;
     }
 
-    @Override
-    public String toString() {
-        return "POJO{" +
-                ", note='" + note + '\'' +
-                '}';
-    }
 }
 
 

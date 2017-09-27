@@ -18,7 +18,9 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -71,25 +73,28 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             @Override
             public void onClick(View v) {
 
-                onEdit.doAfterOnEdit(
-                        position,
-                        holder.tvNotes.getText().toString()
-                );
+                Toast.makeText(context, "inside REAL", Toast.LENGTH_SHORT).show();
+
 
             }
         });
+
 
         /*holder.cvNote.setElevation();*/
 
-        holder.cvNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         holder.itemView.setBackgroundColor(mSelectedItems.get(position)? context.getResources().getColor(R.color.colorPrimary): Color.TRANSPARENT);
 
+
+    }
+
+    //this method is used to add only one on click listener
+    public void setOnClickListener(int position){
+
+        Toast.makeText(context, "inside adapter", Toast.LENGTH_SHORT).show();
+        onEdit.doAfterOnEdit(
+                position,
+                list.get(position).getText()
+        );
     }
 
     @Override
@@ -103,6 +108,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         TextView tvNotes, tvTimeStamp;
         CardView cvNote;
+        LinearLayout llRv;
 
         public NotesViewHolder(View itemView) {
             super(itemView);
@@ -110,6 +116,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             tvNotes = (TextView) itemView.findViewById(R.id.tvNotes);
             tvTimeStamp = (TextView) itemView.findViewById(R.id.tvTimeStamp);
             cvNote = (CardView) itemView.findViewById(R.id.cvNote);
+            llRv = (LinearLayout) itemView.findViewById(R.id.llRv);
 
         }
 

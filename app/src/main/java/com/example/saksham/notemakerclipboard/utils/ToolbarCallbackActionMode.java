@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.example.saksham.notemakerclipboard.Adapters.NotesAdapter;
 import com.example.saksham.notemakerclipboard.Model.NotesPOJO;
 import com.example.saksham.notemakerclipboard.R;
+import com.example.saksham.notemakerclipboard.Views.Activity.MainActivity;
 import com.example.saksham.notemakerclipboard.Views.Fragment.NotesFragment;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ToolbarCallbackActionMode implements ActionMode.Callback {
     private ArrayList<NotesPOJO> notes;
     private NotesFragment notesFragment;
 
-    public ToolbarCallbackActionMode(Activity activity, NotesAdapter notesAdapter, ArrayList<NotesPOJO> notes, NotesFragment notesFragment) {
+    public ToolbarCallbackActionMode(MainActivity activity, NotesAdapter notesAdapter, ArrayList<NotesPOJO> notes, NotesFragment notesFragment) {
 
         this.activity = activity;
         this.notesAdapter = notesAdapter;
@@ -49,7 +50,9 @@ public class ToolbarCallbackActionMode implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
         switch (item.getItemId()) {
+
             case R.id.menu_del:
                 notesFragment.deleteRows();
         }

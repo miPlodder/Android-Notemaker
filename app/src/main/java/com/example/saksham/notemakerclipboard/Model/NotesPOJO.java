@@ -11,6 +11,7 @@ public class NotesPOJO extends RealmObject {
 
     @PrimaryKey
     private int index;
+
     private String text;
     private String timeStamp;
 

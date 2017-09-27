@@ -2,6 +2,7 @@ package com.example.saksham.notemakerclipboard.Views.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import com.example.saksham.notemakerclipboard.utils.ToolbarCallbackActionMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -47,7 +49,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     NotesAdapter notesAdapter;
     Realm realm;
     ActionMode mActionMode;
-    MainActivity mainActivity;
 
     public NotesFragment() {
         // Required empty public constructor
@@ -116,6 +117,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     //on start get data from Realm Dataset
     private void getSavedTextFromDB() {
 
+        Log.d(TAG, "getting data after notify data set ");
         RealmQuery<NotesPOJO> query = realm.where(NotesPOJO.class);
         RealmResults<NotesPOJO> results = query.findAll();
 
@@ -171,18 +173,22 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             @Override
             public void execute(Realm realm) {
 
-                NotesPOJO newNote = new NotesPOJO(note, "");
+
+                //used like hashing to generate a different IDS for all elements
+                Random id = new Random();
+
+                NotesPOJO newNote = realm.createObject(NotesPOJO.class, id.nextInt(Integer.MAX_VALUE));
+                Log.d(TAG, "ID ID ID IDI ID  "+newNote.getIndex());
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aa");
                 String format = simpleDateFormat.format(new Date());
-                Log.d(TAG, "execute: " + format);
 
                 newNote.setTimeStamp(format);
-                newNote.setIndex(notes.size() + 1);
+                newNote.setText(note);
 
                 notes.add(newNote);
-                Log.d(TAG, "addition " + newNote.getIndex());
                 realm.copyToRealmOrUpdate(notes);
+
 
             }
         });
@@ -205,6 +211,8 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
                 notes.get(position).setText(note);
                 //Log.d(TAG, "editing "+notes.get(position).getIndex());
+
+                //here not adding a new object to the REALM DATABASE
                 realm.copyToRealmOrUpdate(notes.get(position));
 
             }
@@ -219,9 +227,11 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         rvNotes.addOnItemTouchListener(new RvItemClickListener(getContext(), rvNotes, new RvItemClickListener.OnRvItemClickListener() {
             @Override
             public void setOnItemClick(View v, int position) {
-                Toast.makeText(getContext(), "OnItemClick, -->" + notes.get(position), Toast.LENGTH_SHORT).show();
+
                 if (mActionMode != null) {
                     onListItemSelect(position);
+                }else{
+                    notesAdapter.setOnClickListener(position);
                 }
             }
 
@@ -231,7 +241,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 onListItemSelect(position);
             }
         }));
-
     }
 
     private void onListItemSelect(int position) {
@@ -241,8 +250,10 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         boolean hasCheckedItems = notesAdapter.getSelectedCount() > 0; //check if any items are already selected
 
         if (hasCheckedItems && mActionMode == null) {
+
             //there are some items selected start the action mode
-            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ToolbarCallbackActionMode(getActivity(), notesAdapter, notes, this));
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ToolbarCallbackActionMode((MainActivity) getActivity(), notesAdapter, notes, this));
+
 
         } else if (!hasCheckedItems && mActionMode != null) {
             //there are no items selected finish the action mode
@@ -256,7 +267,9 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
     public void setNullToActionMode() {
 
         if (mActionMode != null) {
+
             mActionMode = null;
+
         }
     }
 
@@ -274,24 +287,33 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 //If the current id is selected remove the item via key
                 //deleteFromNoteRealm(selected.keyAt(i));
 
+                final NotesPOJO note = notes.get(key);
+                Log.d(TAG, "INDEX INDEX INDEX" + note.getIndex());
+
+                final RealmResults result = realm.where(NotesPOJO.class).equalTo("index", key).findAll();
 
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
 
-                        NotesPOJO note = notes.get(key);
+                        //Log.d(TAG, "execute: "+result.size());
+
+                        notes.remove(key);
+                        notesAdapter.notifyDataSetChanged();
                         note.deleteFromRealm();
+                        Log.d(TAG, "execute: SIZE SIZE SIZE"+notes.size());
 
 
+                        //result.deleteFromRealm(0);;
                     }
                 });
 
-                notes.remove(key);
-                notesAdapter.notifyDataSetChanged();
+                //
+                //
             }
         }
 
-//        Toast.makeText(getContext(), selected.size() + " items deleted", Toast.LENGTH_SHORT).show();
+//      Toast.makeText(getContext(), selected.size() + " items deleted", Toast.LENGTH_SHORT).show();
         Snackbar snackbar = Snackbar.make(rvNotes, selected.size() + " Notes deleted", Snackbar.LENGTH_SHORT);
         snackbar.show();
         mActionMode.finish();

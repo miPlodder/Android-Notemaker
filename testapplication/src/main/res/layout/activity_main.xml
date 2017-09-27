@@ -13,6 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <EditText
+        android:id="@+id/etId"
+        android:hint="Enter ID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
    <EditText
        android:id="@+id/et"
        android:hint="Enter Note"
@@ -21,7 +26,13 @@
 
     <Button
         android:id="@+id/btn"
-        android:text="Save"
+        android:text="View"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnDel"
+        android:text="Delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

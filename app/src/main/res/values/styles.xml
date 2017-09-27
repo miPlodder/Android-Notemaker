@@ -9,6 +9,9 @@
         <!--To remove default action bar instead use -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!--To add action mode on toolbar instead of setting visibility gone or invisible -->
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">

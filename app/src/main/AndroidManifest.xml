@@ -11,9 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity
-            android:name=".Views.Activity.MainActivity"
-            android:theme="@style/AppTheme">
+        <activity android:name=".Views.Activity.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,8 +26,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".Views.Activity.AddNoteActivity"/>
-        <activity android:name=".Views.Activity.EditNoteActivity"/>
+        <activity android:name=".Views.Activity.AddNoteActivity" />
+        <activity android:name=".Views.Activity.EditNoteActivity" />
     </application>
 
 </manifest>

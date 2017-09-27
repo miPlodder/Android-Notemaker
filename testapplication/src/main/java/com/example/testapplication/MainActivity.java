@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -19,9 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
     private Realm realm;
-    Button btn;
-    EditText et;
+    Button btn, btnDel;
+    EditText et,etId;
     TextView tv;
+    ArrayList<POJO> list ;
+    int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        list = new ArrayList<>();
 
         realm = Realm.getDefaultInstance();
         Log.d(TAG, "onCreate: " + realm);
@@ -37,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         btn = (Button) findViewById(R.id.btn);
         et = (EditText) findViewById(R.id.et);
         tv = (TextView) findViewById(R.id.tv);
+        btnDel = (Button) findViewById(R.id.btnDel);
+        etId = (EditText) findViewById(R.id.etId);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,8 +54,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                delFromDB();
+            }
+        });
+
     }
 
+    public void delFromDB(){
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                POJO item = list.get(counter);
+                counter++;
+                //list.remove(counter);
+                if(list.get(counter).getId() == "Invalid object"){
+                    Log.d(TAG, "execute: insideindindeiindendniednidnedined");
+                }
+                item.deleteFromRealm();
+                Log.d(TAG, "delFromDB: "+list);
+                Log.d(TAG, "execute:size "+list.size());
+            }
+        });
+
+
+
+
+    }
 
     @Override
     protected void onDestroy() {
@@ -63,8 +99,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void execute(Realm bgRealm) {
 
-                POJO user = bgRealm.createObject(POJO.class);
+                /*final Dog managedDog = realm.copyToRealm(dog); // Persist unmanaged objects
+                Person person = realm.createObject(Person.class); // Create managed objects directly
+                person.getDogs().add(managedDog);*/
+
+                POJO user = bgRealm.createObject(POJO.class,etId.getText().toString());
                 user.setNote(note);
+
+
+                bgRealm.copyToRealmOrUpdate(user);
 
             }
         }, new Realm.Transaction.OnSuccess() {
@@ -79,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             public void onError(Throwable error) {
                 // Transaction failed and was automatically canceled.
                 Toast.makeText(MainActivity.this, "Error >>>" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onError: "+error.getMessage());
             }
         });
     }
@@ -96,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         for (POJO item : result) {
 
             output += item.toString();
+            list.add(item);
         }
         tv.setText(output);
     }
