@@ -53,8 +53,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
         }
 
-        Log.d(TAG, "onCreate: " + getIntent());
-
     }
 
     protected void initialise() {

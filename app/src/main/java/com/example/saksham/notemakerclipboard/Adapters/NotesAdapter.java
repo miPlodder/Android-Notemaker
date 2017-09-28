@@ -69,7 +69,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         holder.tvNotes.setText(list.get(position).getText());
         holder.tvTimeStamp.setText(list.get(position).getTimeStamp());
 
-        holder.cvNote.setOnClickListener(new View.OnClickListener() {
+        /*holder.cvNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -78,7 +78,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
             }
         });
-
+*/
 
         /*holder.cvNote.setElevation();*/
 
@@ -90,7 +90,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     //this method is used to add only one on click listener
     public void setOnClickListener(int position){
 
-        Toast.makeText(context, "inside adapter", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "inside adapter", Toast.LENGTH_SHORT).show();
         onEdit.doAfterOnEdit(
                 position,
                 list.get(position).getText()

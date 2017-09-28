@@ -19,4 +19,12 @@ public class Constant {
 
     public static final String ACTIVITY_INTENT_KEY_POSITION = "position";
 
+    public static final String ACTIVITY_INTENT_EXTRA_CLIPBOARD_EDIT = "editClipboard";
+
+    public static final String ACTIVTY_INTENT_EXTA_CLIPBOARD_POSITION = "positioninarraylist" ;
+
+    public static final String ACTIVITY_INTENT_EXTRA_CLIPBOARD_RESPONSE = "editCLipboardResponse";
+
+    public static final String ACTIVITY_INTENT_EXTRA_CLIPBOARD_POSITION_RESPONSE = "positionresponse";
+
 }
