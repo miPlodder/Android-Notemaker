@@ -21,11 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
     private Realm realm;
-    Button btn, btnDel;
-    EditText et,etId;
+    Button btnAdd, btnDel, btnView;
+    EditText et, etId;
     TextView tv;
-    ArrayList<POJO> list ;
-    int counter = 0;
+    ArrayList<POJO> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +36,36 @@ public class MainActivity extends AppCompatActivity {
         list = new ArrayList<>();
 
         realm = Realm.getDefaultInstance();
+
+        //every code of realm must be in the TRANSACTION
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                RealmQuery<POJO> query = realm.where(POJO.class);
+                RealmResults<POJO> result = query.findAll();
+
+                for (POJO item : result)
+                    list.add(item);
+
+
+            }
+        });
+
         Log.d(TAG, "onCreate: " + realm);
 
-        btn = (Button) findViewById(R.id.btn);
+        btnView = (Button) findViewById(R.id.btnView);
         et = (EditText) findViewById(R.id.et);
         tv = (TextView) findViewById(R.id.tv);
         btnDel = (Button) findViewById(R.id.btnDel);
         etId = (EditText) findViewById(R.id.etId);
+        btnAdd = (Button) findViewById(R.id.btnAdd);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                saveToDB(et.getText().toString().trim());
+                addToDB(et.getText().toString().trim());
 
             }
         });
@@ -62,26 +78,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                viewFromDB();
+                tv.setText(list.toString());
+            }
+        });
+
     }
 
-    public void delFromDB(){
+    public void viewFromDB() {
+
+        Log.d(TAG, "viewFromDB: " + list);
+
+    }
+
+
+    public void delFromDB() {
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                POJO item = list.get(counter);
-                counter++;
-                //list.remove(counter);
-                if(list.get(counter).getId() == "Invalid object"){
-                    Log.d(TAG, "execute: insideindindeiindendniednidnedined");
-                }
+
+                POJO item = list.get(list.size() - 1);
+
                 item.deleteFromRealm();
-                Log.d(TAG, "delFromDB: "+list);
-                Log.d(TAG, "execute:size "+list.size());
+                list.remove(list.size() - 1);
+
+                Log.d(TAG, "delFromDB: " + list);
+                Log.d(TAG, "execute:size " + list.size());
             }
         });
-
-
 
 
     }
@@ -93,21 +123,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void saveToDB(final String note) {
+    protected void addToDB(final String note) {
 
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                POJO user = realm.createObject(POJO.class, etId.getText().toString());
+                user.setNote(note);
+
+                list.add(user);
+
+                realm.copyToRealmOrUpdate(user);
+
+            }
+        });
+/*
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
 
-                /*final Dog managedDog = realm.copyToRealm(dog); // Persist unmanaged objects
+                */
+/*final Dog managedDog = realm.copyToRealm(dog); // Persist unmanaged objects
                 Person person = realm.createObject(Person.class); // Create managed objects directly
-                person.getDogs().add(managedDog);*/
-
-                POJO user = bgRealm.createObject(POJO.class,etId.getText().toString());
-                user.setNote(note);
+                person.getDogs().add(managedDog);*//*
 
 
-                bgRealm.copyToRealmOrUpdate(user);
 
             }
         }, new Realm.Transaction.OnSuccess() {
@@ -115,33 +156,17 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess() {
                 // Transaction was a success.
                 Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                refreshView();
+
             }
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
                 // Transaction failed and was automatically canceled.
                 Toast.makeText(MainActivity.this, "Error >>>" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onError: "+error.getMessage());
+                Log.d(TAG, "onError: " + error.getMessage());
             }
         });
-    }
+    }*/
 
-    private void refreshView() {
-
-        // Build the query looking at all users:
-        RealmQuery<POJO> query = realm.where(POJO.class);
-
-        // Add query conditions:
-        // Execute the query:
-        RealmResults<POJO> result = query.findAll();
-
-        String output = "";
-        for (POJO item : result) {
-
-            output += item.toString();
-            list.add(item);
-        }
-        tv.setText(output);
     }
 }

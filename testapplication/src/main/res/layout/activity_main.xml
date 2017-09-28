@@ -6,35 +6,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.testapplication.MainActivity">
-    
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary" />
 
     <EditText
         android:id="@+id/etId"
-        android:hint="Enter ID"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-   <EditText
-       android:id="@+id/et"
-       android:hint="Enter Note"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="Enter ID" />
+
+    <EditText
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Note" />
 
     <Button
-        android:id="@+id/btn"
-        android:text="View"
+        android:id="@+id/btnAdd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Add" />
+
+    <Button
+        android:id="@+id/btnView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View" />
 
     <Button
         android:id="@+id/btnDel"
-        android:text="Delete"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Delete" />
 
     <TextView
         android:id="@+id/tv"
