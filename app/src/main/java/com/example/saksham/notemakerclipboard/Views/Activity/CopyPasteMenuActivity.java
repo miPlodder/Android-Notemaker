@@ -1,17 +1,17 @@
-package com.example.saksham.notemakerclipboard;
+package com.example.saksham.notemakerclipboard.Views.Activity;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.saksham.notemakerclipboard.Model.ClipboardPOJO;
+import com.example.saksham.notemakerclipboard.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,7 +44,7 @@ public class CopyPasteMenuActivity extends AppCompatActivity {
         if (i != null && i.getAction().equals(Intent.ACTION_PROCESS_TEXT)) {
 
             //get data from clipboard code here
-            copiedText = i.getStringExtra(Intent.EXTRA_PROCESS_TEXT);
+            copiedText = i.getStringExtra(Intent.EXTRA_PROCESS_TEXT).trim();
             tvClipboard.setText(copiedText);
 
             data = ClipData.newPlainText("text", copiedText);

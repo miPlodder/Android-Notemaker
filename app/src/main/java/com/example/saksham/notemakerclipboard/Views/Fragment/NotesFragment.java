@@ -157,7 +157,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
         if (requestCode == Constant.ACTIVITY_EDIT_NOTE_CODE && resultCode == RESULT_OK) {
 
-            Toast.makeText(getContext(), "Modified Note", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Edited Successfully", Toast.LENGTH_SHORT).show();
 
             //use intent to retriece the data
             updateNote(data);
@@ -178,7 +178,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 Random id = new Random();
 
                 NotesPOJO newNote = realm.createObject(NotesPOJO.class, id.nextInt(Integer.MAX_VALUE));
-                Log.d(TAG, "ID ID ID IDI ID  "+newNote.getIndex());
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aa");
                 String format = simpleDateFormat.format(new Date());
@@ -237,7 +236,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void setOnLongItemClick(View v, int position) {
-                Toast.makeText(getContext(), "Long Click", Toast.LENGTH_SHORT).show();
+
                 onListItemSelect(position);
             }
         }));
@@ -313,7 +312,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-//      Toast.makeText(getContext(), selected.size() + " items deleted", Toast.LENGTH_SHORT).show();
         Snackbar snackbar = Snackbar.make(rvNotes, selected.size() + " Notes deleted", Snackbar.LENGTH_SHORT);
         snackbar.show();
         mActionMode.finish();

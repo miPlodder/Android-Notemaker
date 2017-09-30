@@ -56,7 +56,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
             case android.R.id.home:
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("note", etAddNote.getText().toString());
+                resultIntent.putExtra("note", etAddNote.getText().toString().trim());
                 setResult(RESULT_OK, resultIntent);
                 finish();
                 break;
@@ -72,7 +72,7 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.ibAddNote:
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constant.ACTIVITY_INTENT_KEY_ADD, etAddNote.getText().toString());
+                resultIntent.putExtra(Constant.ACTIVITY_INTENT_KEY_ADD, etAddNote.getText().toString().trim());
                 setResult(RESULT_OK, resultIntent);
                 finish();
                 Toast.makeText(this, "Added Note", Toast.LENGTH_SHORT).show();

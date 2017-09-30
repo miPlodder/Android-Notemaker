@@ -84,7 +84,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
                 Intent i = new Intent();
                 i.putExtra(Constant.ACTIVITY_INTENT_KEY_EDIT,
-                        etEditNote.getText().toString());
+                        etEditNote.getText().toString().trim());
                 i.putExtra(Constant.ACTIVITY_INTENT_KEY_POSITION,
                         position);
                 setResult(RESULT_OK, i);
@@ -101,7 +101,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             case android.R.id.home:
                 Intent i = new Intent();
                 i.putExtra(Constant.ACTIVITY_INTENT_KEY_EDIT,
-                        etEditNote.getText().toString());
+                        etEditNote.getText().toString().trim());
                 i.putExtra(Constant.ACTIVITY_INTENT_KEY_POSITION,
                         position);
                 setResult(RESULT_OK, i);

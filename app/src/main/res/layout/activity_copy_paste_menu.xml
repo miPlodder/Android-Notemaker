@@ -9,7 +9,7 @@
     android:layout_marginRight="5dp"
     android:layout_marginTop="50dp"
     android:background="#00000000"
-    tools:context="com.example.saksham.notemakerclipboard.CopyPasteMenuActivity">
+    tools:context="com.example.saksham.notemakerclipboard.Views.Activity.CopyPasteMenuActivity">
 
     <android.support.v7.widget.CardView
 

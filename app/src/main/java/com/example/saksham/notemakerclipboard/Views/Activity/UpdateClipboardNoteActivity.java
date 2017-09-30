@@ -69,7 +69,7 @@ public class UpdateClipboardNoteActivity extends AppCompatActivity implements Vi
 
             case R.id.ibAddNote:
                 Intent intent = new Intent();
-                intent.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_RESPONSE, etUpdateNote.getText().toString());
+                intent.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_RESPONSE, etUpdateNote.getText().toString().trim());
                 intent.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_POSITION_RESPONSE, position);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -84,7 +84,7 @@ public class UpdateClipboardNoteActivity extends AppCompatActivity implements Vi
 
             case android.R.id.home:
                 Intent i = new Intent();
-                i.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_RESPONSE, etUpdateNote.getText().toString());
+                i.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_RESPONSE, etUpdateNote.getText().toString().trim());
                 i.putExtra(Constant.ACTIVITY_INTENT_EXTRA_CLIPBOARD_POSITION_RESPONSE, position);
                 setResult(RESULT_OK, i);
                 finish();
