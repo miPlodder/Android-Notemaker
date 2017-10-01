@@ -10,13 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Views.Activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Views.Activity.MainActivity"></activity>
         <activity android:name=".Views.Activity.AddNoteActivity" />
         <activity android:name=".Views.Activity.EditNoteActivity" />
         <activity
@@ -30,7 +24,18 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".Views.Activity.UpdateClipboardNoteActivity"></activity>
+        <activity android:name=".Views.Activity.UpdateClipboardNoteActivity" />
+        <activity
+            android:name=".Views.Activity.SplashActivity"
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity android:name=".Views.Activity.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

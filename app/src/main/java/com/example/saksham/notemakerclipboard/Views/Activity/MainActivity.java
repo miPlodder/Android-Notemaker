@@ -1,5 +1,6 @@
 package com.example.saksham.notemakerclipboard.Views.Activity;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.saksham.notemakerclipboard.R;
@@ -21,13 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnLongClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
 
-    private static final String TAG =  "MainActivity";
+    private static final String TAG = "MainActivity";
     public Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private boolean isActionMode = false;
+    private ImageButton ibHelp;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -51,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        ibHelp = (ImageButton) findViewById(R.id.ibHelp);
+        ibHelp.setOnClickListener(this);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -61,7 +67,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         adapter.addFragment(new ClipboardFragment(), "CLIPBOARD");
         viewPager.setAdapter(adapter);
     }
-    
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+
+            case R.id.ibHelp:
+
+                Intent i = new Intent(
+                        this,
+                        WelcomeActivity.class
+                );
+
+                i.putExtra("key", true);
+
+                startActivity(i);
+                break;
+
+        }
+
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
         public static final String TAG = "ViewPagerAdapter";
