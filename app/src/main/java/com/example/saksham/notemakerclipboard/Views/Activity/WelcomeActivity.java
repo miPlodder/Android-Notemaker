@@ -114,12 +114,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
         if (prefManager.isFirstTimeLaunch()) {
 
-            Toast.makeText(this, "IF", Toast.LENGTH_SHORT).show();
             prefManager.setFirstTimeLaunch();
 
         } else {
 
-            Toast.makeText(this, "ELSE", Toast.LENGTH_SHORT).show();
             this.launchSplash();
         }
 
@@ -227,7 +225,6 @@ public class WelcomeActivity extends AppCompatActivity {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(layouts[position], container, false);
-            Toast.makeText(WelcomeActivity.this, "" + layouts[position], Toast.LENGTH_SHORT).show();
             container.addView(view);
 
             return view;

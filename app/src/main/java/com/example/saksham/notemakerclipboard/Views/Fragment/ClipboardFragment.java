@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class ClipboardFragment extends Fragment {
 
@@ -44,6 +46,7 @@ public class ClipboardFragment extends Fragment {
     ArrayList<ClipboardPOJO> list;
     Realm realm;
     ActionMode mActionMode;
+    View view;
     public static final String TAG = "ClipboardFragment";
 
     @Override
@@ -55,14 +58,7 @@ public class ClipboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_clipboard, container, false);
-
-        rvClipoard = (RecyclerView) view.findViewById(R.id.rvClipboard);
-        rvClipoard.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //intialising the REALMDB
-        realm = Realm.getDefaultInstance();
-        list = new ArrayList<>();
+        this.initialise(inflater, container);
         this.initialiseFromRealm(); //getting info from Realm
 
         clipboardAdapter = new ClipboardAdapter(getContext(), list,
@@ -77,18 +73,51 @@ public class ClipboardFragment extends Fragment {
 
                     }
                 });
+
         rvClipoard.setAdapter(clipboardAdapter);
         this.addingRVListener();
 
         return view;
     }
 
+    public void initialise(LayoutInflater inflater, ViewGroup container) {
+
+        view = inflater.inflate(R.layout.fragment_clipboard, container, false);
+        rvClipoard = (RecyclerView) view.findViewById(R.id.rvClipboard);
+        rvClipoard.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //intialising the REALMDB
+        realm = Realm.getDefaultInstance();
+        list = new ArrayList<>();
+
+        RealmChangeListener realmChangeListener = new RealmChangeListener() {
+            @Override
+            public void onChange(Object o) {
+
+                Realm realm = (Realm) o;
+
+                RealmResults<ClipboardPOJO> result = realm.where(ClipboardPOJO.class).findAllSorted("timeStamp", Sort.DESCENDING);
+
+                list.clear();
+                for(ClipboardPOJO item : result){
+
+                    list.add(item);
+                }
+
+                clipboardAdapter.notifyDataSetChanged();
+            }
+        };
+
+        realm.addChangeListener(realmChangeListener);
+
+    }
+
     //here we iterate through the realm
     private void initialiseFromRealm() {
 
-        RealmResults<ClipboardPOJO> result = realm.where(ClipboardPOJO.class).findAll();
-        for (ClipboardPOJO item : result) {
+        RealmResults<ClipboardPOJO> result = realm.where(ClipboardPOJO.class).findAllSorted("timeStamp",Sort.DESCENDING);
 
+        for (ClipboardPOJO item : result) {
             list.add(item);
         }
 
@@ -115,7 +144,7 @@ public class ClipboardFragment extends Fragment {
                 list.get(position).setText(clipboardNote);
 
                 realm.copyToRealmOrUpdate(list.get(position));
-                clipboardAdapter.notifyDataSetChanged();
+                //clipboardAdapter.notifyDataSetChanged();
             }
         });
 
@@ -130,7 +159,7 @@ public class ClipboardFragment extends Fragment {
 
                 if (mActionMode != null) {
                     onListItemSelect(position);
-                }else{
+                } else {
                     clipboardAdapter.setOnClickListener(position);
                 }
             }
@@ -200,10 +229,10 @@ public class ClipboardFragment extends Fragment {
 
                         //Log.d(TAG, "execute: "+result.size());
 
-                        list.remove(key);
-                        clipboardAdapter.notifyDataSetChanged();
+                        //list.remove(key);
+                        //clipboardAdapter.notifyDataSetChanged();
                         note.deleteFromRealm();
-                        Log.d(TAG, "execute: SIZE SIZE SIZE"+list.size());
+                        //Log.d(TAG, "execute: SIZE SIZE SIZE" + list.size());
 
 
                         //result.deleteFromRealm(0);;

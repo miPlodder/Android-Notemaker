@@ -17,6 +17,7 @@ public class SplashActivity extends AppCompatActivity {
     int marginTop = 0;
     public static final String TAG = "SplashActivity";
     CountDownTimer timer ;
+    boolean isAfterPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +60,20 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+
         super.onPause();
-        Toast.makeText(this, "FINISHED", Toast.LENGTH_SHORT).show();
         timer.cancel();
+        isAfterPause = true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(isAfterPause){
+            startActivity(new Intent(SplashActivity.this,
+                    MainActivity.class));
+        }
+
     }
 }

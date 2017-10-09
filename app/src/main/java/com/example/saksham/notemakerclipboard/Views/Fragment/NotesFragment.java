@@ -34,8 +34,10 @@ import java.util.Date;
 import java.util.Random;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -100,9 +102,31 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         rvNotes = (RecyclerView) root.findViewById(R.id.rvNotes);
 
         realm = Realm.getDefaultInstance();
+
+        RealmChangeListener realmChangeListener = new RealmChangeListener() {
+            @Override
+            public void onChange(Object o) {
+
+                Realm realm = (Realm) o;
+                RealmResults<NotesPOJO> result = realm.where(NotesPOJO.class).findAllSorted("timeStamp",Sort.DESCENDING);
+
+                notes.clear();
+
+                //making the list empty
+                for(NotesPOJO item : result){
+
+                    notes.add(item);
+                }
+                Toast.makeText(getContext(), "EMPTY AND FILLING AGAIN LIST", Toast.LENGTH_SHORT).show();
+                notesAdapter.notifyDataSetChanged();
+            }
+        };
+
+        realm.addChangeListener(realmChangeListener);
+
         /*
         This is how we delete all rows from REALM DATABASE
-*/
+        */
         /*realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -119,7 +143,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
         Log.d(TAG, "getting data after notify data set ");
         RealmQuery<NotesPOJO> query = realm.where(NotesPOJO.class);
-        RealmResults<NotesPOJO> results = query.findAll();
+        RealmResults<NotesPOJO> results = query.findAllSorted("timeStamp", Sort.DESCENDING);
 
         for (NotesPOJO item : results) {
 
@@ -137,7 +161,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
             case R.id.fabNotes:
 
-                Log.d(TAG, "onClick: ");
                 startActivityForResult(
                         new Intent(getContext(), AddNoteActivity.class),
                         Constant.ACTIVITY_ADD_NOTE_CODE
@@ -185,7 +208,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 newNote.setTimeStamp(format);
                 newNote.setText(note);
 
-                notes.add(newNote);
+                //notes.add(newNote);
                 realm.copyToRealmOrUpdate(notes);
 
 
@@ -193,7 +216,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         });
 
         //refresh the recycler view list
-        notesAdapter.notifyDataSetChanged();
+        //notesAdapter.notifyDataSetChanged();
 
     }
 
@@ -217,7 +240,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        notesAdapter.notifyDataSetChanged();
+        //notesAdapter.notifyDataSetChanged();
 
     }
 
@@ -297,8 +320,8 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
                         //Log.d(TAG, "execute: "+result.size());
 
-                        notes.remove(key);
-                        notesAdapter.notifyDataSetChanged();
+                        //notes.remove(key);
+                        //notesAdapter.notifyDataSetChanged();
                         note.deleteFromRealm();
                         Log.d(TAG, "execute: SIZE SIZE SIZE"+notes.size());
 
@@ -306,9 +329,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                         //result.deleteFromRealm(0);;
                     }
                 });
-
-                //
-                //
             }
         }
 
@@ -317,5 +337,4 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         mActionMode.finish();
 
     }
-
 }

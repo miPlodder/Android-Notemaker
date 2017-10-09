@@ -13,8 +13,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,8 +39,36 @@ public class MainActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
 
+        RealmChangeListener realmChangeListener = new RealmChangeListener() {
+            @Override
+            public void onChange(Object o) {
+
+                Realm realm = (Realm) o;
+                Toast.makeText(MainActivity.this, "RwalmChangeListener", Toast.LENGTH_SHORT).show();
+
+                RealmResults<POJO> result = realm.where(POJO.class).findAllSorted("note", Sort.ASCENDING);
+
+                Toast.makeText(MainActivity.this, ""+list.size(), Toast.LENGTH_SHORT).show();
+
+                int index = 0;
+                for(POJO item : result) {
+
+                    Log.d(TAG, "onChange: "+item+", ");
+
+                    if(index == list.size())
+                        list.add(item);
+
+                    index++;
+                }
+                Toast.makeText(MainActivity.this, ""+list.size(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        };
+
+        realm.addChangeListener(realmChangeListener);
         //every code of realm must be in the TRANSACTION
-        realm.executeTransaction(new Realm.Transaction() {
+        /*realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
 
@@ -48,12 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 for (POJO item : result)
                     list.add(item);
 
-
             }
         });
-
-        Log.d(TAG, "onCreate: " + realm);
-
+*/
         btnView = (Button) findViewById(R.id.btnView);
         et = (EditText) findViewById(R.id.et);
         tv = (TextView) findViewById(R.id.tv);
@@ -108,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 item.deleteFromRealm();
                 list.remove(list.size() - 1);
 
-                Log.d(TAG, "delFromDB: " + list);
-                Log.d(TAG, "execute:size " + list.size());
             }
         });
 
@@ -125,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
     protected void addToDB(final String note) {
 
-        realm.executeTransaction(new Realm.Transaction() {
+
+
+        /*realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
 
@@ -137,36 +164,30 @@ public class MainActivity extends AppCompatActivity {
                 realm.copyToRealmOrUpdate(user);
 
             }
-        });
-/*
+        });*/
+
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
-            public void execute(Realm bgRealm) {
+            public void execute(Realm realm) {
+                POJO user = realm.createObject(POJO.class, etId.getText().toString());
+                user.setNote(note);
 
-                */
-/*final Dog managedDog = realm.copyToRealm(dog); // Persist unmanaged objects
-                Person person = realm.createObject(Person.class); // Create managed objects directly
-                person.getDogs().add(managedDog);*//*
-
+                realm.copyToRealmOrUpdate(user);
 
 
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                // Transaction was a success.
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
 
+                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
             }
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
-                // Transaction failed and was automatically canceled.
-                Toast.makeText(MainActivity.this, "Error >>>" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onError: " + error.getMessage());
+
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
-    }*/
-
     }
 }
