@@ -96,7 +96,7 @@ public class CopyPasteMenuActivity extends AppCompatActivity {
             public void execute(Realm realm) {
 
                 Random rand = new Random();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aa");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm aa");
                 String format = simpleDateFormat.format(new Date());
 
                 ClipData data = cm.getPrimaryClip();

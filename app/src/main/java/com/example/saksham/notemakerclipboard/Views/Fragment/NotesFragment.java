@@ -3,6 +3,8 @@ package com.example.saksham.notemakerclipboard.Views.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.SyncStateContract;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -30,6 +32,7 @@ import com.example.saksham.notemakerclipboard.utils.ToolbarCallbackActionMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
@@ -108,32 +111,27 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
             public void onChange(Object o) {
 
                 Realm realm = (Realm) o;
-                RealmResults<NotesPOJO> result = realm.where(NotesPOJO.class).findAllSorted("timeStamp",Sort.DESCENDING);
+                RealmResults<NotesPOJO> result = realm.where(NotesPOJO.class).findAllSorted("timeStamp", Sort.DESCENDING);
 
                 notes.clear();
-
                 //making the list empty
-                for(NotesPOJO item : result){
+                for (NotesPOJO item : result) {
 
                     notes.add(item);
                 }
+
+
+                sortTime();
+                Log.d(TAG, "onCreateView:1 " + notes.toString());
+                Collections.reverse(notes);
+                Log.d(TAG, "onCreateView:2 " + notes.toString());
+
                 Toast.makeText(getContext(), "EMPTY AND FILLING AGAIN LIST", Toast.LENGTH_SHORT).show();
                 notesAdapter.notifyDataSetChanged();
             }
         };
 
         realm.addChangeListener(realmChangeListener);
-
-        /*
-        This is how we delete all rows from REALM DATABASE
-        */
-        /*realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-
-                realm.deleteAll();
-            }
-        });*/
 
 
     }
@@ -145,14 +143,117 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         RealmQuery<NotesPOJO> query = realm.where(NotesPOJO.class);
         RealmResults<NotesPOJO> results = query.findAllSorted("timeStamp", Sort.DESCENDING);
 
+        notes.clear();
         for (NotesPOJO item : results) {
 
             notes.add(item);
+        }
+
+        sortTime();
+        Log.d(TAG, "onCreateView:1 " + notes.toString());
+        Collections.reverse(notes);
+        Log.d(TAG, "onCreateView:2 " + notes.toString());
+
+    }
+
+    public void sortTime() {
+
+        for (int i = 0; i < notes.size(); i++) {
+
+
+            for (int j = i+1; j < notes.size(); j++) {
+
+                String date1 = notes.get(i).getTimeStamp();
+                String date2 = notes.get(j).getTimeStamp();
+
+                if (compareDate(date1, date2) == 1) {
+                    //date1 is greater //swap
+                    NotesPOJO temp = notes.get(i);
+                    notes.set(i, notes.get(j));
+                    notes.set(j, temp);
+
+
+                } else {
+                    //Log.d(TAG, "sortTime: "+date1+","+date2);
+                    //date2 is greater
+                    //nothing to do
+                }
+            }
+        }
+        Log.d(TAG, "sortTime: " + notes);
+    }
+
+    public int compareDate(String timeStamp1, String timeStamp2) {
+
+        int year1 = Integer.parseInt(timeStamp1.substring(12, 16)), year2 = Integer.parseInt(timeStamp2.substring(12, 16));
+        int month1 = Constant.getMonthNumber(timeStamp1.substring(8, 11)), month2 = Constant.getMonthNumber(timeStamp2.substring(8, 11));
+        int date1 = Integer.parseInt(timeStamp1.substring(5, 7).trim()), date2 = Integer.parseInt(timeStamp2.substring(5, 7).trim());
+        int hour1 = Integer.parseInt(timeStamp1.substring(17, 19)), hour2 = Integer.parseInt(timeStamp2.substring(17, 19));
+        int min1 = Integer.parseInt(timeStamp1.substring(20, 22).trim()), min2 = Integer.parseInt(timeStamp2.substring(20, 22).trim());
+
+        if (year1 < year2) {
+
+            //timestamp2 is greater
+            return -1;
+        } else if (year1 == year2) {
+
+            if (month1 > month2) {
+
+                //timestamp1 is greater
+                return 1;
+
+            } else if (month1 == month2) {
+
+                if (date1 > date2) {
+
+                    //timestamp1 is greater
+                    return 1;
+                } else if (date1 == date2) {
+
+                    if (hour1 > hour2) {
+
+                        return 1;
+
+                    } else if (hour1 == hour2) {
+
+                        if (min1 > min2) {
+                            return 1;
+
+                        } else if (min1 == min2) {
+                            return 0; //both dates are equal
+                        } else {
+                            return -1;
+                        }
+
+                    } else {
+                        return -1;
+
+                    }
+
+
+                } else {
+
+                    //timestamp2 is greater
+                    return -1;
+                }
+
+            } else {
+
+                //timestamp2 is greater
+                return -1;
+            }
+
+
+        } else {
+
+            //1 means timestamp1 is greater
+            return 1;
 
         }
 
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -202,7 +303,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
                 NotesPOJO newNote = realm.createObject(NotesPOJO.class, id.nextInt(Integer.MAX_VALUE));
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm aa");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm aa");
                 String format = simpleDateFormat.format(new Date());
 
                 newNote.setTimeStamp(format);
@@ -252,7 +353,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
 
                 if (mActionMode != null) {
                     onListItemSelect(position);
-                }else{
+                } else {
                     notesAdapter.setOnClickListener(position);
                 }
             }
@@ -323,7 +424,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                         //notes.remove(key);
                         //notesAdapter.notifyDataSetChanged();
                         note.deleteFromRealm();
-                        Log.d(TAG, "execute: SIZE SIZE SIZE"+notes.size());
+                        Log.d(TAG, "execute: SIZE SIZE SIZE" + notes.size());
 
 
                         //result.deleteFromRealm(0);;

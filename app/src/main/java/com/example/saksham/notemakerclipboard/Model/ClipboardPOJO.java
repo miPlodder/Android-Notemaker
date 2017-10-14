@@ -42,4 +42,11 @@ public class ClipboardPOJO extends RealmObject {
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+    @Override
+    public String toString() {
+
+
+        return timeStamp;
+    }
 }

@@ -27,4 +27,20 @@ public class Constant {
 
     public static final String ACTIVITY_INTENT_EXTRA_CLIPBOARD_POSITION_RESPONSE = "positionresponse";
 
+    public static final String[] MONTH_INITIALS = {"Jan", "Feb", "Mar", "Apr" , "May" , "Jun" , "Jul" , "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+    public static int getMonthNumber(String month){
+
+        int rv = -1;
+
+        for (int i = 0 ; i < 12 ; i++){
+
+            if(month.equals(MONTH_INITIALS[i])){
+                rv = i + 1;
+            }
+
+        }
+        return rv;
+    }
+
 }

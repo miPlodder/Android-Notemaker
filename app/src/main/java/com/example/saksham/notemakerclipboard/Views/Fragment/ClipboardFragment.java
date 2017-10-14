@@ -32,6 +32,7 @@ import com.example.saksham.notemakerclipboard.utils.ToolbarCallbackActionMode;
 import com.example.saksham.notemakerclipboard.utils.ToolbarCallbackActionModeClipboard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -77,6 +78,7 @@ public class ClipboardFragment extends Fragment {
         rvClipoard.setAdapter(clipboardAdapter);
         this.addingRVListener();
 
+
         return view;
     }
 
@@ -104,6 +106,8 @@ public class ClipboardFragment extends Fragment {
                     list.add(item);
                 }
 
+                sortTimeStamp();
+                Collections.reverse(list);
                 clipboardAdapter.notifyDataSetChanged();
             }
         };
@@ -117,9 +121,13 @@ public class ClipboardFragment extends Fragment {
 
         RealmResults<ClipboardPOJO> result = realm.where(ClipboardPOJO.class).findAllSorted("timeStamp",Sort.DESCENDING);
 
+        list.clear();
         for (ClipboardPOJO item : result) {
             list.add(item);
         }
+
+        sortTimeStamp();
+        Collections.reverse(list);
 
     }
 
@@ -170,6 +178,103 @@ public class ClipboardFragment extends Fragment {
                 onListItemSelect(position);
             }
         }));
+    }
+
+    public void sortTimeStamp(){
+
+        for (int i = 0; i < list.size(); i++) {
+
+            for (int j = i + 1; j < list.size(); j++) {
+
+                String date1 = list.get(i).getTimeStamp();
+                String date2 = list.get(j).getTimeStamp();
+
+                if (compareDate(date1, date2) == 1) {
+                    //date1 is greater //swap
+                    ClipboardPOJO temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+
+                } else {
+                    //date2 is greater
+                    //nothing to do
+                }
+            }
+        }
+
+
+    }
+
+    public int compareDate(String timeStamp1, String timeStamp2) {
+
+        int year1 = Integer.parseInt(timeStamp1.substring(12, 16)), year2 = Integer.parseInt(timeStamp2.substring(12, 16));
+        int month1 = Constant.getMonthNumber(timeStamp1.substring(8, 11)), month2 = Constant.getMonthNumber(timeStamp2.substring(8, 11));
+
+        int date1 = Integer.parseInt(timeStamp1.substring(5, 7).trim()), date2 = Integer.parseInt(timeStamp2.substring(5, 7).trim());
+        int hour1 = Integer.parseInt(timeStamp1.substring(17, 19)), hour2 = Integer.parseInt(timeStamp2.substring(17, 19));
+
+        int min1 = Integer.parseInt(timeStamp1.substring(20, 22).trim()), min2 = Integer.parseInt(timeStamp2.substring(20, 22).trim());
+
+        if (year1 < year2) {
+
+            //timestamp2 is greater
+            return -1;
+        } else if (year1 == year2) {
+
+            if (month1 > month2) {
+
+                //timestamp1 is greater
+                return 1;
+
+            } else if (month1 == month2) {
+
+                if (date1 > date2) {
+
+                    //timestamp1 is greater
+                    return 1;
+                } else if (date1 == date2) {
+
+                    if (hour1 > hour2) {
+
+                        return 1;
+
+                    } else if (hour1 == hour2) {
+
+                        if (min1 > min2) {
+                            return 1;
+
+                        } else if (min1 == min2) {
+                            return 0; //both dates are equal
+                        } else {
+                            return -1;
+                        }
+
+                    } else {
+                        return -1;
+
+                    }
+
+
+                } else {
+
+                    //timestamp2 is greater
+                    return -1;
+                }
+
+            } else {
+
+                //timestamp2 is greater
+                return -1;
+            }
+
+
+        } else {
+
+            //1 means timestamp1 is greater
+            return 1;
+
+        }
+
     }
 
     private void onListItemSelect(int position) {
