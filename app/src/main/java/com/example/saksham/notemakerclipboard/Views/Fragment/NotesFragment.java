@@ -126,7 +126,6 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
                 Collections.reverse(notes);
                 Log.d(TAG, "onCreateView:2 " + notes.toString());
 
-                Toast.makeText(getContext(), "EMPTY AND FILLING AGAIN LIST", Toast.LENGTH_SHORT).show();
                 notesAdapter.notifyDataSetChanged();
             }
         };
@@ -161,7 +160,7 @@ public class NotesFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < notes.size(); i++) {
 
 
-            for (int j = i+1; j < notes.size(); j++) {
+            for (int j = i + 1; j < notes.size(); j++) {
 
                 String date1 = notes.get(i).getTimeStamp();
                 String date2 = notes.get(j).getTimeStamp();

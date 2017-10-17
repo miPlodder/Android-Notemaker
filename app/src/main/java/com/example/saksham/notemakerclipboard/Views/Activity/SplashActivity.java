@@ -26,14 +26,14 @@ public class SplashActivity extends AppCompatActivity {
 
         llSplash = (LinearLayout) findViewById(R.id.llSplash);
 
-        timer = (new CountDownTimer(1000, 50) {
+        timer = (new CountDownTimer(700, 50) {
 
             @Override
             public void onTick(long millisUntilFinished) {
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(llSplash.getLayoutParams());
 
-                marginTop += 30;
+                marginTop += 50;
                 Log.d(TAG, "onTick: "+marginTop);
                 params.setMargins(0, marginTop, 0, 0);
                 llSplash.setLayoutParams(params);
@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
                                 MainActivity.class));
                         finish();
                     }
-                }, 1000);
+                }, 800);
 
             }
         }).start();

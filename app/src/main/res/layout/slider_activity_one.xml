@@ -18,6 +18,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:src="@drawable/slider1"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center" />
@@ -43,7 +44,7 @@
             android:lines="3"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="The best application to prevent device theft in Crowded Areas like Metros, Buses, or Trains."
+            android:text="This app allows you to copy text from anywhere, any app using Cut Copy Paste Menu and save it."
             android:textColor="#FFF"
             android:textSize="12sp" />
 

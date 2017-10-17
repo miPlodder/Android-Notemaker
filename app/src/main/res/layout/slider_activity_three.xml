@@ -18,6 +18,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:src="@drawable/slider3"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center" />
@@ -27,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
-                android:text="Welcome"
+                android:text="How to Copy ?"
                 android:textColor="#FFF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -37,13 +38,13 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:lines="3"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="The best application to prevent device theft in Crowded Areas like Metros, Buses, or Trains."
+            android:text="Select the text you want to SAVE, just select Copier from the Cut Copy Paste Menu"
             android:textColor="#FFF"
             android:textSize="12sp" />
 

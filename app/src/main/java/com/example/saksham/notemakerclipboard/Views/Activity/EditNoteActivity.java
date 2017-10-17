@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.saksham.notemakerclipboard.R;
 import com.example.saksham.notemakerclipboard.utils.Constant;
@@ -26,7 +27,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private static final String TAG = "EditNoteActivity";
     Toolbar toolbarAddNote;
     EditText etEditNote;
-    ImageButton ibAddNote;
+    ImageButton ibAddNote, ibEdit;
     String note;
     int position;
 
@@ -90,6 +91,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 setResult(RESULT_OK, i);
                 finish();
                 break;
+
         }
     }
 

@@ -8,9 +8,9 @@
     <!--ADDING BELOW COLORS FOR SLIDER-->
     <!-- Screens background color-->
     <color name="bg_screen1">#f64c73</color>
-    <color name="bg_screen2">#20d2bb</color>
-    <color name="bg_screen3">#3395ff</color>
     <color name="bg_screen4">#c873f4</color>
+    <color name="bg_screen3">#3395ff</color>
+    <color name="bg_screen2">#20d2bb</color>
 
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#d1395c</color>
@@ -26,16 +26,17 @@
 
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
-        <item>@color/dot_light_screen2</item>
-        <item>@color/dot_light_screen3</item>
         <item>@color/dot_light_screen4</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen2</item>
     </array>
 
     <array name="array_dot_inactive">
         <item>@color/dot_dark_screen1</item>
-        <item>@color/dot_dark_screen2</item>
-        <item>@color/dot_dark_screen3</item>
         <item>@color/dot_dark_screen4</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen2</item>
+
     </array>
 
 

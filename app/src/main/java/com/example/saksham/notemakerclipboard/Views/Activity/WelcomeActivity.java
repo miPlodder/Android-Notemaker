@@ -177,7 +177,7 @@ public class WelcomeActivity extends AppCompatActivity {
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
-                btnSkip.setVisibility(View.GONE);
+                btnSkip.setVisibility(View.INVISIBLE);
             } else {
                 // still pages are left
                 btnNext.setText(getString(R.string.next));
