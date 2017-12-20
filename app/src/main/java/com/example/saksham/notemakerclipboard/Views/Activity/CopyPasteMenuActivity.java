@@ -12,6 +12,10 @@ import android.widget.Toast;
 
 import com.example.saksham.notemakerclipboard.Model.ClipboardPOJO;
 import com.example.saksham.notemakerclipboard.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +31,8 @@ public class CopyPasteMenuActivity extends AppCompatActivity {
     Realm realm;
     ClipboardManager cm;
     ClipData data;
+
+    AdView avBanner ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,8 @@ public class CopyPasteMenuActivity extends AppCompatActivity {
 
     private void initialise() {
 
+        MobileAds.initialize(this,"ca-app-pub-7330879514084285~1120920926");
+
         llOk = (LinearLayout) findViewById(R.id.llOk);
         llCancel = (LinearLayout) findViewById(R.id.llCancel);
         tvClipboard = (TextView) findViewById(R.id.tvClipboardCopied);
@@ -63,6 +71,9 @@ public class CopyPasteMenuActivity extends AppCompatActivity {
 
         cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
+        avBanner = (AdView) findViewById(R.id.avBanner);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        avBanner.loadAd(adRequest);
 
     }
 

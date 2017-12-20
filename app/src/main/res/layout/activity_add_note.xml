@@ -35,9 +35,10 @@
     <EditText
         android:id="@+id/etAddNote"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
         android:background="@null"
+        android:gravity="top"
         android:hint="Write Something ..."
         android:paddingTop="40dp" />
 

@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(llSplash.getLayoutParams());
 
-                marginTop += 50;
+                marginTop += 43;
                 Log.d(TAG, "onTick: "+marginTop);
                 params.setMargins(0, marginTop, 0, 0);
                 llSplash.setLayoutParams(params);
